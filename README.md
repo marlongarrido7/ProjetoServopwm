@@ -15,12 +15,13 @@ Este projeto faz parte das atividades do **EMBARCATECH 2024/25**.
 3. [Funcionalidades](#funcionalidades)
 4. [Requisitos do Projeto](#requisitos-do-projeto)
 5. [Diagrama Simplificado de Conexões](#diagrama-simplificado-de-conexões)
-6. [Como Executar o Projeto](#como-executar-o-projeto)
-7. [Estrutura do Código](#estrutura-do-código)
-8. [Explicação do Código](#explicação-do-código)
-9. [Trecho de Código](#trecho-de-código)
-10. [Referências](#referências)
-11. [Demonstração em Vídeo](#demonstração-em-vídeo)
+6. [Componentes Utilizados](#componentes-utilizados)
+7. [Como Executar o Projeto](#como-executar-o-projeto)
+8. [Estrutura do Código](#estrutura-do-código)
+9. [Explicação do Código](#explicação-do-código)
+10. [Trecho de Código](#trecho-de-código)
+11. [Referências](#referências)
+12. [Demonstração em Vídeo](#demonstração-em-vídeo)
 
 ---
 
@@ -29,6 +30,7 @@ Este projeto faz parte das atividades do **EMBARCATECH 2024/25**.
 - Configurar e entender a utilização do **módulo PWM** do microcontrolador **RP2040**.
 - Simular o funcionamento do servomotor no ambiente **Wokwi**.
 - Desenvolver um sistema que movimente a flange do servomotor suavemente entre **0 e 180 graus**.
+- Explorar a precisão do controle PWM para aplicações em sistemas embarcados.
 
 ---
 
@@ -37,6 +39,8 @@ O projeto consiste na implementação de um controle para um **servomotor padrã
 
 1. **Microcontrolador Raspberry Pi Pico W**
 2. **Servomotor - Motor Micro Servo Padrão**
+3. **Fonte de alimentação adequada (3,3V)**
+4. **Jumpers para conexão dos componentes**
 
 O controle do servomotor é realizado através da modulação de largura de pulso (**PWM**) no **GPIO 22**, variando o ciclo de trabalho para definir diferentes posições do servo.
 
@@ -47,6 +51,16 @@ O controle do servomotor é realizado através da modulação de largura de puls
 - Controle do servomotor para posicionamento em **0º, 90º e 180º**.
 - Movimentação **suave e contínua** do servomotor entre **0º e 180º**.
 - Aguardo de **5 segundos** em cada posição inicial antes da movimentação contínua.
+- Código otimizado para melhor precisão no controle do servo.
+
+---
+
+## Componentes Utilizados
+- **Raspberry Pi Pico W**
+- **Servomotor SG90 ou similar**
+- **Jumpers para conexão**
+- **Fonte de alimentação 3,3V**
+- **Placa de prototipagem (opcional)**
 
 ---
 
