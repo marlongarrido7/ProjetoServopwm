@@ -17,9 +17,10 @@ Este projeto faz parte das atividades do **EMBARCATECH 2024/25**.
 5. [Diagrama Simplificado de Conexões](#diagrama-simplificado-de-conexões)
 6. [Como Executar o Projeto](#como-executar-o-projeto)
 7. [Estrutura do Código](#estrutura-do-código)
-8. [Trecho de Código](#trecho-de-código)
-9. [Referências](#referências)
-10. [Demonstração em Vídeo](#demonstração-em-vídeo)
+8. [Explicação do Código](#explicação-do-código)
+9. [Trecho de Código](#trecho-de-código)
+10. [Referências](#referências)
+11. [Demonstração em Vídeo](#demonstração-em-vídeo)
 
 ---
 
@@ -49,44 +50,16 @@ O controle do servomotor é realizado através da modulação de largura de puls
 
 ---
 
-## Requisitos do Projeto
-1. **Frequência do PWM** no **GPIO 22** configurada para **50Hz** (**20% da nota**).
-2. **Ciclo de trabalho do PWM**:
-   - **2.400µs (0,12%)** - Servo em **180 graus** (**10% da nota**).
-   - **1.470µs (0,0735%)** - Servo em **90 graus** (**10% da nota**).
-   - **500µs (0,025%)** - Servo em **0 graus** (**10% da nota**).
-3. **Movimentação contínua suave** entre **0º e 180º** com incrementos de **±5µs** e atraso de **10ms** (**35% da nota**).
+## Explicação do Código
 
----
+### Inicialização do PWM
+O código inicia configurando o GPIO 22 como saída PWM e obtendo o **slice PWM** correspondente. Em seguida, define-se um **divisor de clock** e um **período de 20ms (50Hz)** para o PWM.
 
-## Diagrama Simplificado de Conexões
-```
-+--------------------+
-| Raspberry Pi Pico W |
-|                    |
-| GPIO 22 ----------> ServoMotor |
-+--------------------+
-```
+### Controle de Posições
+A função `set_servo_angle` define a posição do servomotor de acordo com o ciclo de trabalho, mantendo o sinal por **5 segundos** antes de prosseguir.
 
----
-
-## Como Executar o Projeto
-1. **Clone** ou **copie** o código-fonte para o seu ambiente local.
-2. Configure o ambiente com o **Pico SDK**.
-3. Compile e gere o binário:
-   ```sh
-   mkdir build
-   cd build
-   cmake ..
-   make
-   ```
-4. **Transfira** o arquivo **.uf2** gerado para o Raspberry Pi Pico W.
-5. **Teste** e observe o comportamento do servomotor.
-
----
-
-## Estrutura do Código
-- **servopwm.c** - Contém a lógica para controle do PWM e movimentação do servo.
+### Movimentação Contínua
+No loop `while(true)`, o servo se move suavemente entre **0 e 180 graus**, com incrementos de **5 microssegundos** a cada **10ms**, garantindo uma transição fluida.
 
 ---
 
