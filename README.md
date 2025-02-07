@@ -18,10 +18,9 @@ Este projeto faz parte das atividades do **EMBARCATECH 2024/25**.
 6. [Componentes Utilizados](#componentes-utilizados)
 7. [Como Executar o Projeto](#como-executar-o-projeto)
 8. [Estrutura do Código](#estrutura-do-código)
-9. [Explicação do Código](#explicação-do-código)
-10. [Trecho de Código](#trecho-de-código)
-11. [Referências](#referências)
-12. [Demonstração em Vídeo](#demonstração-em-vídeo)
+9. [Explicação Detalhada do Código](#explicação-detalhada-do-código)
+10. [Referências](#referências)
+11. [Demonstração em Vídeo](#demonstração-em-vídeo)
 
 ---
 
@@ -64,57 +63,79 @@ O controle do servomotor é realizado através da modulação de largura de puls
 
 ---
 
-## Explicação do Código
+## Explicação Detalhada do Código
 
-### Inicialização do PWM
-O código inicia configurando o GPIO 22 como saída PWM e obtendo o **slice PWM** correspondente. Em seguida, define-se um **divisor de clock** e um **período de 20ms (50Hz)** para o PWM.
-
-### Controle de Posições
-A função `set_servo_angle` define a posição do servomotor de acordo com o ciclo de trabalho, mantendo o sinal por **5 segundos** antes de prosseguir.
-
-### Movimentação Contínua
-No loop `while(true)`, o servo se move suavemente entre **0 e 180 graus**, com incrementos de **5 microssegundos** a cada **10ms**, garantindo uma transição fluida.
-
----
-
-## Trecho de Código
+### Bibliotecas Utilizadas
 ```c
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/pwm.h"
+```
+- **stdio.h** → Permite a utilização de funções de entrada e saída padrão (como `printf()`).
+- **pico/stdlib.h** → Biblioteca padrão do Raspberry Pi Pico para inicialização de GPIOs e temporização.
+- **hardware/pwm.h** → Biblioteca responsável pelo controle do PWM (Pulse Width Modulation), essencial para o controle do servomotor.
 
+### Definição de Pinos
+```c
 #define SERVO_PIN 22  // Pino onde o servomotor está conectado
+```
+- Define o **pino GPIO 22** como a saída PWM para controlar o servomotor.
 
+### Função `set_servo_angle()`
+```c
 void set_servo_angle(uint slice, uint level) {
     pwm_set_gpio_level(SERVO_PIN, level);
     sleep_ms(5000); // Aguarda 5 segundos
 }
+```
+- **Parâmetros:**
+  - `slice`: Identificador do canal PWM correspondente ao GPIO utilizado.
+  - `level`: Define o tempo em **microssegundos** que o sinal PWM permanecerá em nível alto (HIGH), o que determina o ângulo do servo.
+- **O que a função faz?**
+  1. Ajusta o nível PWM no **GPIO 22** usando `pwm_set_gpio_level()`, alterando a posição do servomotor.
+  2. Aguarda **5 segundos** (`sleep_ms(5000)`) para que o servo mantenha a posição antes de continuar a execução.
 
+### Função `main()`
+```c
 int main() {
-    stdio_init_all();
-    gpio_set_function(SERVO_PIN, GPIO_FUNC_PWM);
-    uint slice = pwm_gpio_to_slice_num(SERVO_PIN);
-    
-    pwm_set_clkdiv(slice, 125.0);
-    pwm_set_wrap(slice, 20000);
-    pwm_set_enabled(slice, true);
-    
-    set_servo_angle(slice, 2400);  // 180 graus
-    set_servo_angle(slice, 1470);  // 90 graus
-    set_servo_angle(slice, 500);   // 0 graus
-    
-    while (true) {
-        for (uint level = 500; level <= 2400; level += 5) {
-            pwm_set_gpio_level(SERVO_PIN, level);
-            sleep_ms(10);
-        }
-        for (uint level = 2400; level >= 500; level -= 5) {
-            pwm_set_gpio_level(SERVO_PIN, level);
-            sleep_ms(10);
-        }
+```
+- Função **principal** que inicializa os periféricos e executa o controle do servo.
+
+### Inicialização do PWM
+```c
+stdio_init_all();
+gpio_set_function(SERVO_PIN, GPIO_FUNC_PWM);
+uint slice = pwm_gpio_to_slice_num(SERVO_PIN);
+```
+1. **`stdio_init_all();`** → Inicializa a interface de entrada/saída padrão.
+2. **`gpio_set_function(SERVO_PIN, GPIO_FUNC_PWM);`** → Configura o **GPIO 22** como saída PWM.
+3. **`uint slice = pwm_gpio_to_slice_num(SERVO_PIN);`** → Obtém o número do **slice PWM** correspondente ao GPIO configurado.
+
+### Posicionamento do Servo
+```c
+set_servo_angle(slice, 2400);  // 180 graus
+set_servo_angle(slice, 1470);  // 90 graus
+set_servo_angle(slice, 500);   // 0 graus
+```
+- Define **três posições fixas** para o servo:
+  - **180°** → Pulso de **2400 µs**.
+  - **90°** → Pulso de **1470 µs**.
+  - **0°** → Pulso de **500 µs**.
+
+### Movimentação Suave entre 0° e 180°
+```c
+while (true) {
+    for (uint level = 500; level <= 2400; level += 5) {
+        pwm_set_gpio_level(SERVO_PIN, level);
+        sleep_ms(10);
+    }
+    for (uint level = 2400; level >= 500; level -= 5) {
+        pwm_set_gpio_level(SERVO_PIN, level);
+        sleep_ms(10);
     }
 }
 ```
+- **Controla o movimento contínuo do servo** entre **0° e 180°**.
 
 ---
 
